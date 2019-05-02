@@ -132,15 +132,56 @@ Initialization
    # Include the excel helper functions
    source("excelhelper.r")
 
+This piece of code should be at the beginning of your R Code. It sets the working directory to the script directory. This is necessary since the input and ouput files are looked in this folder. The above code will work both in RStudio and when called from VBA through the R Console using source().
+The last line includes the functions inside "excelhelper.r" which help reading and writing data.
+
+
 
 getTable
 +++++++++++++++++++++++++++++
 
+.. code-block:: R
+
+   getTable <- function(tableName) {
+     read_excel("_Input_.xlsx", sheet = tableName)
+   }
+
+This is defined in excelhelper.r and allows reading a range into a dataframe using readxl
+
+.. code-block:: R
+
+   table1 <- getTable("table1")
 
 
 writeResult 
 +++++++++++++++++++++++++++++
 
+.. code-block:: R
+
+   writeResult <- function(tablenames) {
+     write_xlsx(tablenames, path = "_Output_.xlsx", col_names = TRUE, format_headers = FALSE)
+   }
+
+This is defined in excelhelper.r and allows writing a dataframe into the output file using writexl
+
+.. code-block:: R
+
+   writeResult(list("result" = res))
+
 
 done
 +++++++++++++++++++++++++++++
+
+.. code-block:: R
+
+   done <- function() {
+     file.create("done")
+     closeAllConnections()
+   }
+     
+   
+This should be called at the end of your script. It generates a file that signals that the process has ended and VBA can then retrieve the data safely.
+
+.. code-block:: R
+
+   done()
