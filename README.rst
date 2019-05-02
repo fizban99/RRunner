@@ -6,7 +6,7 @@ This VBA module for Excel allows running R Scripts from Excel. You can send Rang
 This is a much simpler solution than RExcel. It is simpler to install and, although it has less features, it provides enough functionality to leverage the power of R when you need Excel to perform specific tasks better suited for R.
 
 
-   .. image:: ./images/ssd1306spi_sm.jpg
+   .. image:: ./images/RRunner.png
       :width: 100%
       :align: center
       
@@ -28,7 +28,9 @@ Main features
 Installation
 ============
 
-1. 
+1. Make sure you have R installed (https://cran.r-project.org/bin/windows/base/)
+2. Launch the R Console in SDI mode (single window). You can add –sdi to the Windows shortcut to force the Console to be launched in SDI mode.
+3. Import the RRunner.bas module into your Excel project or copy and paste everything (except the first line) into a new module.
 
 
 Library usage

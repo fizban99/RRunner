@@ -9,7 +9,6 @@ getTable <- function(tableName) {
 
 writeResult <- function(tablenames) {
   write_xlsx(tablenames, path = "_Output_.xlsx", col_names = TRUE, format_headers = FALSE)
-  done()
 }
 
 
