@@ -61,6 +61,7 @@ If you modify WORKING_PATH, it should be an absolute path without the ending \. 
 
 RunR2Range
 +++++++++++++++++++++++
+
 .. code-block:: VB
    
    RunR2Range(script As String, outRange As Range, ParamArray Ranges() As Variant) As Boolean
