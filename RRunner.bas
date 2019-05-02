@@ -4,7 +4,7 @@ Option Explicit
 ' Configuration Parameters
 ' ###################################################################
 ' Path to the R Scripts and where the temporary files will be created
-Private Const WORKING_PATH = "."
+Private Const WORKING_PATH = "./R"
 ' Time to wait for the R Script answer in milliseconds
 Private Const TimeOutMilliseconds = 10000
 Private Const INTERFACE_IN_FILE_NAME = "_Input_"
@@ -61,8 +61,8 @@ Public Function RunRScript(InputRange As Dictionary, OutputRange As Dictionary, 
     Dim rng As Range, Key As Variant, OutputKey As String, doneFile As String
         
     Application.ScreenUpdating = False
-    If WORKING_PATH = "." Then
-        WorkingPath = ThisWorkbook.Path
+    If Left(WORKING_PATH, 1) = "." Then
+        WorkingPath = ThisWorkbook.Path & Right(WORKING_PATH, Len(WORKING_PATH) - 1)
     Else
         WorkingPath = WORKING_PATH
     End If
