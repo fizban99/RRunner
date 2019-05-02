@@ -40,7 +40,7 @@ Configuration
 
 
 
-.. code-block:: VBA
+.. code-block:: VisualBasic
 
    ' ###################################################################
    ' Configuration Parameters
