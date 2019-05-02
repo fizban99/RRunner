@@ -40,7 +40,7 @@ Configuration
 
 
 
-.. code-block:: 
+.. code-block:: VBA
 
    ' ###################################################################
    ' Configuration Parameters
