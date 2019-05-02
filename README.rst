@@ -42,7 +42,7 @@ VBA library usage
 Configuration
 +++++++++++++++++++++++
 You can leave the default configuration parameters as they are. By default, the R scripts will be searched in the subfolder "R" of the same folder as the Excel file and they will be allowed 10 seconds to execute before assuming timeout. The interface files between Excel and R will be called _Input_.xlsx and _Output_.xlsx and will be created in the same folder.
-If you modify WORKING_PATH, it should be an absolute path without the ending \. You can use relative paths to the Excel file starting the path with ".". By default, the scripts are searched in the ./r folder.
+If you modify WORKING_PATH, it can be an absolute or relative path without the ending \. If using relative paths, they are relative to the folder where the Excel file is located. By default, the scripts are searched in the .\r folder.
 
 
 .. code-block:: VB
@@ -51,7 +51,7 @@ If you modify WORKING_PATH, it should be an absolute path without the ending \. 
    ' Configuration Parameters
    ' ###################################################################
    ' Path to the R Scripts and where the temporary files will be created
-   Private Const WORKING_PATH = "./R"
+   Private Const WORKING_PATH = ".\R"
    ' Time to wait for the R Script answer in milliseconds
    Private Const TimeOutMilliseconds = 10000
    Private Const INTERFACE_IN_FILE_NAME = "_Input_"
@@ -101,7 +101,11 @@ This will generate an _Input_xlsx file with one sheet containing the data in the
 RunRScript
 +++++++++++++++++++++++++++++
 
+.. code-block:: VB
+   
+   RunRScript(InputRange As Dictionary, OutputRange As Dictionary, OutputPictures As Dictionary, script As String) As Boolean
 
+This function is the generalisation of the other two. The input ranges are sent as dictionaries using the name as key and the value the actual range.
 
 
 R library usage
@@ -109,6 +113,23 @@ R library usage
 
 Initialization
 +++++++++++++++++++++++++++++
+
+.. code-block:: R
+   # Check if RStudio is running to set the working directory to the script directory
+   # https://stackoverflow.com/questions/35986037/detect-if-an-r-session-is-run-in-rstudio-at-startup
+   is.na(Sys.getenv("RSTUDIO", unset = NA))
+   if (!is.na(Sys.getenv("RSTUDIO", unset = NA))) {
+     # Get current directory
+     current_dir <- dirname(rstudioapi::getSourceEditorContext()$path)
+     # Set working directory to current directory (script directory)
+     setwd(current_dir)
+   } else {
+     # If sourced https://stackoverflow.com/questions/13672720/r-command-for-setting-working-directory-to-source-file-location-in-rstudio
+     this.dir <- dirname(parent.frame(2)$ofile)
+     setwd(this.dir)
+   }
+   # Include the excel helper functions
+   source("excelhelper.r")
 
 
 getTable
