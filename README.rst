@@ -63,7 +63,7 @@ RunR2Range
 +++++++++++++++++++++++
 .. code-block:: VB
    
-RunR2Range(script As String, outRange As Range, ParamArray Ranges() As Variant) As Boolean
+   RunR2Range(script As String, outRange As Range, ParamArray Ranges() As Variant) As Boolean
 
 This function accepts the name of the script (just the name, including the extension), a range where the result will be placed (just the top-left corner cell needs to be indicated) and a set of name-ranges pairs.
 
