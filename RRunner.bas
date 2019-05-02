@@ -170,7 +170,7 @@ Public Function RunR2Range(script As String, outRange As Range, ParamArray Range
         Set inp(Ranges(i)) = Ranges(i + 1)
     Next i
     
-    Set out("Resultado") = outRange
+    Set out("result") = outRange
     RunR2Range = RunRScript(inp, out, outP, script)
 End Function
 

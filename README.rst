@@ -76,7 +76,7 @@ E.g.
        MsgBox "Done"
    End If
  
-The SampleJoin.r script will be called and in the _Input_.xlsx file two sheets will be created
+The SampleJoin.r script will be called and in the _Input_.xlsx file two sheets will be created for the script to use as input data. The script should output the result in the _Output_.xlsx in a sheet called "result"
 
 RunR2Plot
 +++++++++++++++++++++++
