@@ -41,15 +41,15 @@ Configuration
 
 
 .. code-block:: VBA
-                         ' ###################################################################
-                         ' Configuration Parameters
-                         ' ###################################################################
-                         ' Path to the R Scripts and where the temporary files will be created
-                         Private Const WORKING_PATH = "."
-                         ' Time to wait for the R Script answer in milliseconds
-                         Private Const TimeOutMilliseconds = 10000
-                         Private Const INTERFACE_IN_FILE_NAME = "_Input_"
-                         Private Const INTERFACE_OUT_FILE_NAME = "_Output_"
+   ' ###################################################################
+   ' Configuration Parameters
+   ' ###################################################################
+   ' Path to the R Scripts and where the temporary files will be created
+   Private Const WORKING_PATH = "."
+   ' Time to wait for the R Script answer in milliseconds
+   Private Const TimeOutMilliseconds = 10000
+   Private Const INTERFACE_IN_FILE_NAME = "_Input_"
+   Private Const INTERFACE_OUT_FILE_NAME = "_Output_"
    
 
 
