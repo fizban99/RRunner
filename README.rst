@@ -115,6 +115,7 @@ Initialization
 +++++++++++++++++++++++++++++
 
 .. code-block:: R
+
    # Check if RStudio is running to set the working directory to the script directory
    # https://stackoverflow.com/questions/35986037/detect-if-an-r-session-is-run-in-rstudio-at-startup
    is.na(Sys.getenv("RSTUDIO", unset = NA))
