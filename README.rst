@@ -69,11 +69,12 @@ RunR2Range
 This function accepts the name of the script (just the name, including the extension), a range where the result will be placed (just the top-left corner cell needs to be indicated) and a set of name-ranges pairs.
 
 E.g.
+
 .. code-block:: VB
 
-If RRunner.RunR2Range("SampleJoin.r", OutRange, "table1", Range1, "table2", Range2) Then
-        MsgBox "Done"
-End If
+   If RRunner.RunR2Range("SampleJoin.r", OutRange, "table1", Range1, "table2", Range2) Then
+       MsgBox "Done"
+   End If
  
 The SampleJoin.r script will be called and in the _Input_.xlsx file two sheets will be created
 
