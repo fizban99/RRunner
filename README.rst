@@ -42,7 +42,7 @@ VBA library usage
 Configuration
 +++++++++++++++++++++++
 You can leave the default configuration parameters as they are. By default, the R scripts will be searched in the subfolder "R" of the same folder as the Excel file and they will be allowed 10 seconds to execute before assuming timeout. The interface files between Excel and R will be called _Input_.xlsx and _Output_.xlsx and will be created in the same folder.
-If you modify WORKING_PATH, it can be an absolute or relative path without the ending \. If using relative paths, they are relative to the folder where the Excel file is located. By default, the scripts are searched in the .\r folder.
+If you modify WORKING_PATH, it can be an absolute or relative path without the ending "\\". If using relative paths, they are relative to the folder where the Excel file is located. By default, the scripts are searched in the ".\\r" folder.
 
 
 .. code-block:: VB
