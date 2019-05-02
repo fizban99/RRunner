@@ -1,4 +1,4 @@
-RRunner Simple way of running R scripts from Excel VBA
+RRunner: Simple way of running R scripts from Excel VBA
 #######################################################
 
 This VBA module for Excel allows running R Scripts from Excel. You can send Ranges to your scripts and retrieve plots from them.
@@ -31,6 +31,7 @@ Installation
 1. Make sure you have R installed (https://cran.r-project.org/bin/windows/base/)
 2. Launch the R Console in SDI mode (single window). You can add –sdi to the Windows shortcut to force the Console to be launched in SDI mode.
 3. Import the RRunner.bas module into your Excel project or copy and paste everything (except the first line) into a new module.
+4. Make sure you have checked *Microsoft Scripting Runtime* in your Project References.
 
 
 Library usage
