@@ -19,7 +19,7 @@ Main features
 =============
 
 * Only the default R installation is required. No additional components required to interact with R, although RStudio is recommended for the development of your scripts.
-* The R Console is used transparently to launch the R scripts, so all output messages are displayed on it. Some antivirus prevent running external files from within Excel, by pre-launching the R Console manually, we can avoid a false positive alert.
+* The R Console is used transparently to launch the R scripts, so all output messages are displayed on it. Some antivirus prevent running external files from within Excel. By pre-launching the R Console manually, we can avoid a false positive alert.
 * The ranges are sent and retrieved to R through temporary Excel files that you can use while you develop your scripts, independently of the original Excel. 
 * Generate Static plots in R and import them in Excel 
 * Sample programs demonstrating the different functions
@@ -30,7 +30,7 @@ Installation
 
 1. Make sure you have R installed (https://cran.r-project.org/bin/windows/base/)
 2. Make sure you have the libraries readxl and writexl installed. Most likely you will want to install the tidyverse libraries as well. 
-3. Launch the R Console in SDI mode (single window). You can add –sdi to the Windows shortcut to force the Console to be launched in SDI mode.
+3. Launch the R Console in SDI mode (single window). You can add –sdi to the Windows shortcut to force the Console to be launched in SDI mode. The console has to be running for RRunner to work. It can be minimized, though.
 4. Import the RRunner.bas module into your Excel project or copy and paste everything (except the first line) into a new module.
 5. Make sure you have checked *Microsoft Scripting Runtime* in your Project References.
 
@@ -76,7 +76,7 @@ E.g.
        MsgBox "Done"
    End If
  
-The SampleJoin.r script will be called and in the _Input_.xlsx file two sheets will be created for the script to use as input data. The script should output the result in the _Output_.xlsx in a sheet called "result"
+The SampleJoin.r script will be called and in the _Input_.xlsx file two sheets will be created for the script to use as input data. The script should output the result in a file called _Output_.xlsx in a sheet called "result". The data will be then read from this sheet and placed starting at the top-left corner of OutRange.
 
 RunR2Plot
 +++++++++++++++++++++++
