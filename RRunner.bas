@@ -150,7 +150,6 @@ Private Sub LoadOutput(TableName As String, rng As Range)
     
     SetStatus "Retrieving output..."
     Set wb = Application.Workbooks.Open(WorkingPath + "\" & INTERFACE_OUT_FILE_NAME & ".xlsx")
-    'wb.Windows(1).Visible = False
     tblArr = wb.Worksheets(TableName).UsedRange.Value
     wb.Close
     rows = UBound(tblArr, 1)
@@ -223,7 +222,6 @@ Private Sub ExportFiles(InputRange As Dictionary)
     filePath = WorkingPath + "\" + INTERFACE_IN_FILE_NAME + ".xlsx"
 
     Set tempWB = Application.Workbooks.Add()
-    tempWB.Windows(1).Visible = False
     For Each Key In InputRange.Keys
         KeyVal = Key
         ExportTable KeyVal, InputRange(Key), tempWB
