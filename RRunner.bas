@@ -4,7 +4,7 @@ Option Explicit
 ' Configuration Parameters
 ' ###################################################################
 ' Path to the R Scripts and where the temporary files will be created
-Private Const WORKING_PATH = "./R"
+Private Const WORKING_PATH = ".\R"
 ' Time to wait for the R Script answer in milliseconds
 Private Const TimeOutMilliseconds = 10000
 Private Const INTERFACE_IN_FILE_NAME = "_Input_"
@@ -197,14 +197,18 @@ Private Sub ExportTable(TableName As String, rng As Range, tempWB As Workbook)
     
     ' Find the last not empty row. This allows to send a range as columns
     ' https://www.excelcampus.com/vba/find-last-row-column-cell/
-    lrow = rng.Find(What:="*", _
-                    After:=rng(1, 1), _
-                    lookAt:=xlPart, _
-                    LookIn:=xlFormulas, _
-                    SearchOrder:=xlByRows, _
-                    SearchDirection:=xlPrevious, _
-                    MatchCase:=False).row
-    tblArr = rng.Resize(lrow).Value
+    If rng.rows.Count > 2 Then
+        lrow = rng.Find(What:="*", _
+                        After:=rng(1, 1), _
+                        lookAt:=xlPart, _
+                        LookIn:=xlFormulas, _
+                        SearchOrder:=xlByRows, _
+                        SearchDirection:=xlPrevious, _
+                        MatchCase:=False).Row
+        tblArr = rng.Resize(lrow).Value
+    Else
+        lrow = rng.rows.Count
+    End If
     cols = UBound(tblArr, 2)
     SetStatus "Exporting table " + TableName + "..."
     Set sht = tempWB.Worksheets.Add
