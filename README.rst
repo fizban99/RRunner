@@ -34,13 +34,14 @@ Installation
 4. Make sure you have checked *Microsoft Scripting Runtime* in your Project References.
 
 
-Library usage
-=============
+VBA library usage
+=================
 
 
 Configuration
 +++++++++++++++++++++++
-
+You can leave the default configuration parameters as they are. By default, the r scripts will be searched in the same folder as the Excel file and the R scripts will be allowed 10 seconds to execute before assuming timeout. The interface files between Excel and R will be called _Input_.xlsx and _Output_.xlsx and will be created in the same folder.
+If you modify WORKING_PATH, it should be an absolute path without the ending \. The only exception is ".", which is considered the current folder.
 
 
 .. code-block:: VB
@@ -76,5 +77,21 @@ RunRScript
 
 
 
+R library usage
+=================
+
+Initialization
++++++++++++++++++++++++++++++
 
 
+getTable
++++++++++++++++++++++++++++++
+
+
+
+writeResult 
++++++++++++++++++++++++++++++
+
+
+done
++++++++++++++++++++++++++++++
