@@ -29,9 +29,7 @@ Dim WorkingPath As String
 
 
 Private Sub SetStatus(s As String)
-    'Application.ScreenUpdating = True
     Application.StatusBar = s
-    'Application.ScreenUpdating = False
 End Sub
 ' Get the window handle of a windows given a part of its caption
 Private Function GetHandleFromPartialCaption(ByRef lWnd As Long, ByVal sCaption As String) As Boolean
@@ -224,7 +222,7 @@ Private Sub ExportFiles(InputRange As Dictionary)
     Dim tempWB As Workbook, filePath As String
     
     filePath = WorkingPath + "\" + INTERFACE_IN_FILE_NAME + ".xlsx"
-
+    SetStatus "Exporting ranges to R..."
     Set tempWB = Application.Workbooks.Add()
     For Each Key In InputRange.Keys
         KeyVal = Key

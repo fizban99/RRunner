@@ -139,6 +139,7 @@ Initialization
 This piece of code should be at the beginning of your R Code. It sets the working directory to the script directory. This is necessary since the input and ouput files are looked in this folder. The above code will work both in RStudio and when called from VBA through the R Console using source().
 The last line includes the functions inside "excelhelper.r" which help reading and writing data.
 
+The template.r provides a good starting point for your scripts.
 
 
 getTable
