@@ -70,8 +70,7 @@ RunR2Range
 
 This function accepts the name of the script (just the name, including the extension), a range where the result will be placed (just the top-left corner cell needs to be indicated) and a set of name-ranges pairs.
 
-E.g.
-
+Example:
 .. code-block:: VB
 
    Set Range1 = ActiveWorkbook.Worksheets("Data1").Range("A:C")
@@ -93,6 +92,7 @@ RunR2Plot
 
 This function accepts the name of the script (just the name, including the extension), a range from which to read the data and a ChartObject in which to insert the generated chart image. To insert an empty ChartObject, just click on any empty cell, and go to Insert and select any chart type. You can then give a name to this area selecting it and using the usual Name Box (the input box directly to the left of the formula bar).
 
+Example:
 .. code-block:: VB
 
    Set ws = ActiveWorkbook.Worksheets("Data1")
@@ -150,6 +150,7 @@ getTable
 
 This is defined in excelhelper.r and allows reading a range into a dataframe using readxl
 
+Example:
 .. code-block:: R
 
    table1 <- getTable("table1")
@@ -166,6 +167,7 @@ writeResult
 
 This is defined in excelhelper.r and allows writing a dataframe into the output file using writexl
 
+Example:
 .. code-block:: R
 
    writeResult(list("result" = res))
@@ -184,6 +186,7 @@ done
    
 This should be called at the end of your script. It generates a file that signals that the process has ended and VBA can then retrieve the data safely.
 
+Example:
 .. code-block:: R
 
    done()
