@@ -22,7 +22,15 @@ diamonds<- data.frame(diamonds)
 names(diamonds)[8]<-"length"
 names(diamonds)[9]<-"width"
 names(diamonds)[10]<-"depth"
+
 # now we have two columns named depth. Let's rename the first one (column 5) to "depthperc." 
 names(diamonds)[5]<-"depthperc"
+
+# Write the result
 writeResult(tablenames = list("result"=diamonds))
+
+# Signal the end of the process
 done()
+
+# free up all variables
+rm(list=ls())

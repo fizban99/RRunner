@@ -20,14 +20,14 @@ library(dplyr)
 # Read the input files
 diamonds<- getTable("diamonds")
 
-# Multiply length, width, and depth together in a new column called "cubic"
-diamonds <- mutate(diamonds, cubic=length*width*depth)
+#  let's round the carat values to the nearest 0.25 carat so that our numbers are not all over the place. 
+diamonds$carat2 <- round(diamonds$carat/.25)*.25
 
-# Select only the calculated column to return less information
-diamonds <- select(diamonds, cubic)
-
+# Now, let's create our summary. 
+Summary <- aggregate(cbind(depthperc, table, price, length, width, depth, cubic)~cut+color+clarity+carat2, data=diamonds, mean)
+  
 # Write the result
-writeResult(tablenames = list("result"=diamonds))
+writeResult(tablenames = list("result"=Summary))
 
 # Signal the end of the process
 done()
