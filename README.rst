@@ -57,9 +57,9 @@ If you modify WORKING_PATH, it can be an absolute or relative path without the e
    Private Const INTERFACE_IN_FILE_NAME = "_Input_"
    Private Const INTERFACE_OUT_FILE_NAME = "_Output_"
    
-   .. image:: ./images/rrunner_diagram.png
-      :width: 100%
-      :align: center
+.. image:: ./images/rrunner_diagram.png
+   :width: 100%
+   :align: center
 
 RunR2Range
 +++++++++++++++++++++++
