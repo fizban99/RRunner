@@ -3,16 +3,16 @@ library(readxl)
 library(writexl)
 
 getTable <- function(tableName) {
-  read_excel("_Input_.xlsx", sheet = tableName)
+  read_excel("../tmp/_RInput_.xlsx", sheet = tableName)
 }
 
 
 writeResult <- function(tablenames) {
-  write_xlsx(tablenames, path = "_Output_.xlsx", col_names = TRUE, format_headers = FALSE)
+  write_xlsx(tablenames, path = "../tmp/_ROutput_.xlsx", col_names = TRUE, format_headers = FALSE)
 }
 
 
 done <- function() {
-  file.create("done")
+  file.create("../tmp/done")
   closeAllConnections()
 }

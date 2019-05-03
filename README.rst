@@ -41,7 +41,7 @@ VBA library usage
 
 Configuration
 +++++++++++++++++++++++
-You can leave the default configuration parameters as they are. By default, the R scripts will be searched in the subfolder "R" of the same folder as the Excel file and they will be allowed 10 seconds to execute before assuming timeout. The interface files between Excel and R will be called _Input_.xlsx and _Output_.xlsx and will be created in the same folder.
+You can leave the default configuration parameters as they are. By default, the R scripts will be searched in the subfolder "R" of the same folder as the Excel file and they will be allowed 10 seconds to execute before assuming timeout. The interface files between Excel and R will are called _RInput_.xlsx and _ROutput_.xlsx and will be created in the ".\\tmp" folder.
 If you modify WORKING_PATH, it can be an absolute or relative path without the ending "\\". If using relative paths, they are relative to the folder where the Excel file is located. By default, the scripts are searched in the ".\\r" folder. When the R script finishes, it should generate a "done" file to tell VBA that the process has finished.
 
 
@@ -51,11 +51,13 @@ If you modify WORKING_PATH, it can be an absolute or relative path without the e
    ' Configuration Parameters
    ' ###################################################################
    ' Path to the R Scripts and where the temporary files will be created
-   Private Const WORKING_PATH = ".\R"
+   Private Const R_SCRIPTS_PATH = ".\r"
+   Private Const WORKING_PATH = ".\tmp"
    ' Time to wait for the R Script answer in milliseconds
-   Private Const TimeOutMilliseconds = 10000
-   Private Const INTERFACE_IN_FILE_NAME = "_Input_"
-   Private Const INTERFACE_OUT_FILE_NAME = "_Output_"
+   Private Const TIMEOUT_MILLISECONDS = 10000
+   Private Const R_IN_FILE_NAME = "_RInput_"
+   Private Const R_OUT_FILE_NAME = "_ROutput_"
+   ' ###################################################################
    
 .. image:: ./images/rrunner_diagram.png
    :width: 100%
@@ -148,7 +150,7 @@ getTable
 .. code-block:: R
 
    getTable <- function(tableName) {
-     read_excel("_Input_.xlsx", sheet = tableName)
+     read_excel("../tmp/_Input_.xlsx", sheet = tableName)
    }
 
 This is defined in excelhelper.r and allows reading a range into a dataframe using readxl
@@ -166,7 +168,7 @@ writeResult
 .. code-block:: R
 
    writeResult <- function(tablenames) {
-     write_xlsx(tablenames, path = "_Output_.xlsx", col_names = TRUE, format_headers = FALSE)
+     write_xlsx(tablenames, path = "../tmp/_Output_.xlsx", col_names = TRUE, format_headers = FALSE)
    }
 
 This is defined in excelhelper.r and allows writing a dataframe into the output file using writexl
@@ -184,7 +186,7 @@ done
 .. code-block:: R
 
    done <- function() {
-     file.create("done")
+     file.create("../tmp/done")
      closeAllConnections()
    }
      
