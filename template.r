@@ -29,11 +29,12 @@ table1 <- getTable("table1")
 res <- table1
 
 # Save any plots
-ggsave(filename = "mychart.png")
+saveChart("mychart")
+
 # Write the result
 writeResult(list("result" = res))
 
 # Signal the end of the process
 done()
-# free up all variables
+# free up all variables. You might want to comment this out while testing your script in RStudio
 rm(list=ls())
