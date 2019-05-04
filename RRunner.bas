@@ -102,8 +102,9 @@ Public Function RunRScript(RangesToExport As Dictionary, RangesToImport As Dicti
     End If
     
     ' Generate input files for the R script
-    ExportFiles RangesToExport
-    
+    If Not ExportFiles(RangesToExport) Then
+        Exit Function
+    End If
     
     script = "source('" + Replace(RScriptsPath, "\", "/") + "/" + script + "')" + vbNewLine
     
@@ -234,15 +235,17 @@ End Function
 
 
 'Export a range into a sheet of a given workbook
-Private Sub ExportTable(TableName As String, rng As Range, tempWB As Workbook)
+Private Function ExportTable(TableName As String, rng As Range, tempWB As Workbook) As Boolean
 
     Dim tblArr As Variant
     Dim cols As Long, lrow As Long
     Dim sht As Worksheet, destRng As Range
     
+    ExportTable = True
     ' Find the last not empty row. This allows to send a range as columns
     ' https://www.excelcampus.com/vba/find-last-row-column-cell/
     If rng.rows.Count > 2 Then
+        On Error GoTo empty_range:
         lrow = rng.Find(What:="*", _
                         After:=rng(1, 1), _
                         lookAt:=xlPart, _
@@ -250,6 +253,7 @@ Private Sub ExportTable(TableName As String, rng As Range, tempWB As Workbook)
                         SearchOrder:=xlByRows, _
                         SearchDirection:=xlPrevious, _
                         MatchCase:=False).Row
+        On Error GoTo 0
         tblArr = rng.Resize(lrow).Value
     Else
         lrow = rng.rows.Count
@@ -260,27 +264,36 @@ Private Sub ExportTable(TableName As String, rng As Range, tempWB As Workbook)
     sht.Name = TableName
     Set destRng = sht.Range(sht.Cells(1, 1), sht.Cells(lrow, cols))
     destRng.Value = tblArr
-    
-End Sub
+    Exit Function
+empty_range:
+    On Error GoTo 0
+    MsgBox ("Empty Range selected to export.")
+    ExportTable = False
+End Function
 
 'Export a dictionary of ranges to the interface workbook
-Private Sub ExportFiles(InputRange As Dictionary)
+Private Function ExportFiles(InputRange As Dictionary) As Boolean
     Dim Key As Variant, KeyVal As String
     Dim tempWB As Workbook, filePath As String
     
+    ExportFiles = True
     filePath = WorkingPath + "\" + R_IN_FILE_NAME + ".xlsx"
     SetStatus "Exporting ranges to R..."
     Set tempWB = Application.Workbooks.Add()
     For Each Key In InputRange.Keys
         KeyVal = Key
-        ExportTable KeyVal, InputRange(Key), tempWB
+        If Not ExportTable(KeyVal, InputRange(Key), tempWB) Then
+            ExportFiles = False
+            tempWB.Close False
+            Exit Function
+        End If
     Next Key
     Application.DisplayAlerts = False
     tempWB.SaveAs filePath, FileFormat:=xlOpenXMLWorkbook, CreateBackup:=False
     tempWB.Close False
     Application.DisplayAlerts = True
     SetStatus ""
-End Sub
+End Function
 
 'Insert a file picture inside a given ChartObject
 Private Sub LoadOutputPicture(PictureName As String, ChartArea As ChartObject)
