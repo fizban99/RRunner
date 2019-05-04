@@ -34,7 +34,7 @@ Installation
 4. Import the RRunner.bas module into your Excel project or copy and paste everything (except the first line) into a new module.
 5. Make sure you have checked *Microsoft Scripting Runtime* in your Project References.
 
-   .. image:: ./images/ms_scripting_runtime.png
+   .. image:: ./images/ms_scripting_runtime.PNG
       :width: 100%       
       :align: center
 
@@ -153,7 +153,7 @@ getTable
 .. code-block:: R
 
    getTable <- function(tableName) {
-     read_excel("../tmp/_Input_.xlsx", sheet = tableName)
+     read_excel("../tmp/_RInput_.xlsx", sheet = tableName)
    }
 
 This is defined in excelhelper.r and allows reading a range into a dataframe using readxl
@@ -171,7 +171,7 @@ writeResult
 .. code-block:: R
 
    writeResult <- function(tablenames) {
-     write_xlsx(tablenames, path = "../tmp/_Output_.xlsx", col_names = TRUE, format_headers = FALSE)
+     write_xlsx(tablenames, path = "../tmp/_ROutput_.xlsx", col_names = TRUE, format_headers = FALSE)
    }
 
 This is defined in excelhelper.r and allows writing a dataframe into the output file using writexl
