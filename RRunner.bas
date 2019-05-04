@@ -284,12 +284,40 @@ End Sub
 
 'Insert a file picture inside a given ChartObject
 Private Sub LoadOutputPicture(PictureName As String, ChartArea As ChartObject)
-    Dim filePath As String, sh As Shape
+    Dim filePath As String, sh As Shape, pic As Shape, meas As Variant, wia As Object
+    Dim orWidth As Long, orHeight As Long
     filePath = WorkingPath + "\" + PictureName + ".png"
     For Each sh In ChartArea.Chart.Shapes
         sh.Delete
     Next sh
-    ChartArea.Chart.Shapes.AddPicture filePath, msoFalse, msoCTrue, 0, 0, -1, -1
+
+    On Error Resume Next
+    Set pic = ChartArea.Chart.Shapes.AddPicture(filePath, msoFalse, msoCTrue, 0, 0, -1, -1)
+    If Err.Number <> 0 Then
+        MsgBox Err.Description & ": " & filePath
+        Exit Sub
+    End If
+    On Error GoTo 0
+    Set wia = CreateObject("WIA.ImageFile")
+    'Load the ImageFile object with the specified File.
+    wia.LoadFile filePath
+    'Get the necessary properties.
+    orWidth = wia.Width
+    orHeight = wia.Height
+    'Release the ImageFile object.
+    Set wia = Nothing
+    With pic
+        .LockAspectRatio = msoFalse
+        .Placement = xlFreeFloating
+        If orWidth / orHeight < ChartArea.Width / ChartArea.Height Then
+            .Height = ChartArea.Height
+            .Width = .Height * orWidth / orHeight
+        Else
+            .Width = ChartArea.Width
+            .Height = .Width * orHeight / orWidth
+        End If
+        .LockAspectRatio = msoTrue
+    End With
+
 End Sub
     
-

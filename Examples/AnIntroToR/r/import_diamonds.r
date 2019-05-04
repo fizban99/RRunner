@@ -16,6 +16,7 @@ source("excelhelper.r")
 
 # We are going to use the diamonds data set that comes with ggplot2
 library(ggplot2)
+
 diamonds<- data.frame(diamonds)
 
 # Let's rename columns 8, 9, and 10. 

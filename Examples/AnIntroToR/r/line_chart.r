@@ -14,24 +14,22 @@ if (!is.na(Sys.getenv("RSTUDIO", unset = NA))) {
 # Include the excel helper functions
 source("excelhelper.r")
 
-# library for data manipulation
-library(dplyr)
-library(reshape2)
+# we will use ggplot2 for our charts
+library(ggplot2)
 
 # Read the input files
-diamonds<- getTable("diamonds")
+diamonds<- getTable("color_linechart")
 
-# Let's say we wanted to categorize diamonds into size categories 
-# such as small, medium, and large based on their carat weight. 
-diamonds = mutate(diamonds, size = case_when(carat < 0.5 ~ "Small",
-                                  carat < 1 ~ "Medium",
-                                  carat >= 1 ~ "Large"))
+# Define the order of the clarity levels
+diamonds$clarity <- factor(diamonds$clarity, levels = c("I1","SI2","SI1","VS2","VS1","VVS2","VVS1","IF"))
 
-# Select only the size to return less information
-diamonds = select(diamonds, size)
-
-# Write the result
-writeResult(tablenames = list("result"=diamonds))
+# We will create a line for each color and see how the number of diamonds of that color change across clarity categories..
+ggplot(diamonds, aes(clarity)) + 
+  geom_freqpoly(aes(group = color, colour = color), stat="count") + 
+  labs(x="Clarity", y="Number of Diamonds", title="Clarity by Color") 
+  
+# save the chart
+saveChart("color_linechart")
 
 # Signal the end of the process
 done()

@@ -14,24 +14,19 @@ if (!is.na(Sys.getenv("RSTUDIO", unset = NA))) {
 # Include the excel helper functions
 source("excelhelper.r")
 
-# library for data manipulation
-library(dplyr)
-library(reshape2)
+# we will use ggplot2 for our charts
+library(ggplot2)
 
 # Read the input files
-diamonds<- getTable("diamonds")
+diamonds<- getTable("sizes_barchart")
 
-# Let's say we wanted to categorize diamonds into size categories 
-# such as small, medium, and large based on their carat weight. 
-diamonds = mutate(diamonds, size = case_when(carat < 0.5 ~ "Small",
-                                  carat < 1 ~ "Medium",
-                                  carat >= 1 ~ "Large"))
-
-# Select only the size to return less information
-diamonds = select(diamonds, size)
-
-# Write the result
-writeResult(tablenames = list("result"=diamonds))
+# Let's say we want to create a chart that shows how many diamonds of each size (small/medium/large) are in our data.
+ggplot(diamonds, aes(x=size)) + 
+  geom_bar(stat="count", fill="blue") + 
+  labs(title="Diamond Size Distribution", x="Size Category", y="Number of Diamonds")
+  
+# save the chart
+saveChart("sizes_barchart")
 
 # Signal the end of the process
 done()
