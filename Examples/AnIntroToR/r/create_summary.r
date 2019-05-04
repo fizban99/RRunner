@@ -20,8 +20,6 @@ library(dplyr)
 # Read the input files
 diamonds<- getTable("diamonds")
 
-#  let's round the carat values to the nearest 0.25 carat so that our numbers are not all over the place. 
-diamonds$carat2 <- round(diamonds$carat/.25)*.25
 
 # Now, let's create our summary (Ctrl-Shift-M for the pipe %>% in RStudio)
 Summary <- diamonds %>% 

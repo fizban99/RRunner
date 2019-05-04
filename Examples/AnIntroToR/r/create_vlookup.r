@@ -26,8 +26,8 @@ Summary <- getTable("summary")
 # This way, we won't have two price fields when we bring it over.
 names(Summary)[7]<-"avgprice"
 
-# Next, let's merge the data sets and bring over the average price. 
-diamonds <- inner_join(diamonds, Summary)
+# Next, let's perform an inner join of the diamonds with the Summary and bring over the average price. 
+diamonds <- inner_join(diamonds, select(Summary, "cut", "color", "clarity", "carat2", "avgprice")) 
 
 # Write the result
 writeResult(tablenames = list("result"=diamonds))

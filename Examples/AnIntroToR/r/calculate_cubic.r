@@ -23,8 +23,12 @@ diamonds<- getTable("diamonds")
 # Multiply length, width, and depth together in a new column called "cubic"
 diamonds <- mutate(diamonds, cubic=length*width*depth)
 
+# let's round the carat values to the nearest 0.25 carat so that our numbers are not all over the place. 
+# this is an alternative way to mutate
+diamonds$carat2 <- round(diamonds$carat/.25)*.25
+
 # Select only the calculated column to return less information
-diamonds <- select(diamonds, cubic)
+diamonds <- select(diamonds, carat2, cubic)
 
 # Write the result
 writeResult(tablenames = list("result"=diamonds))
@@ -33,4 +37,4 @@ writeResult(tablenames = list("result"=diamonds))
 done()
 
 # free up all variables
-rm(list=ls())
+#rm(list=ls())
