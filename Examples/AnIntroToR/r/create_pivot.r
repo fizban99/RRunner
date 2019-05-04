@@ -16,21 +16,19 @@ source("excelhelper.r")
 
 # library for data manipulation
 library(dplyr)
+library(reshape2)
 
 # Read the input files
 diamonds<- getTable("diamonds")
 
-#  let's round the carat values to the nearest 0.25 carat so that our numbers are not all over the place. 
-diamonds$carat2 <- round(diamonds$carat/.25)*.25
+# Then, we'll use the dcast function to get our data into the same pivot table format.
+# we're taking the color, clarity, and price columns from the diamonds data frame, 
+# casting (pivoting) them out by color (rows) and clarity (columns),
+# and calculating the average price for each combination. 
+pivot_table <- dcast(diamonds[,c('color','clarity','price')], color~clarity, mean)
 
-# Now, let's create our summary (Ctrl-Shift-M for the pipe %>% in RStudio)
-Summary <- diamonds %>% 
-  group_by(cut, color, clarity, carat2) %>% 
-  summarise_all(list(mean)) %>% 
-  arrange(desc(cubic))
-  
 # Write the result
-writeResult(tablenames = list("result"=Summary))
+writeResult(tablenames = list("result"=pivot_table))
 
 # Signal the end of the process
 done()

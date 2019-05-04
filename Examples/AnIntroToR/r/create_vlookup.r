@@ -16,21 +16,21 @@ source("excelhelper.r")
 
 # library for data manipulation
 library(dplyr)
+library(reshape2)
 
 # Read the input files
 diamonds<- getTable("diamonds")
+Summary <- getTable("summary")
 
-#  let's round the carat values to the nearest 0.25 carat so that our numbers are not all over the place. 
-diamonds$carat2 <- round(diamonds$carat/.25)*.25
+# First, let's change the name of the price column in the Summary data frame to avgprice. 
+# This way, we won't have two price fields when we bring it over.
+names(Summary)[7]<-"avgprice"
 
-# Now, let's create our summary (Ctrl-Shift-M for the pipe %>% in RStudio)
-Summary <- diamonds %>% 
-  group_by(cut, color, clarity, carat2) %>% 
-  summarise_all(list(mean)) %>% 
-  arrange(desc(cubic))
-  
+# Next, let's merge the data sets and bring over the average price. 
+diamonds <- inner_join(diamonds, Summary)
+
 # Write the result
-writeResult(tablenames = list("result"=Summary))
+writeResult(tablenames = list("result"=diamonds))
 
 # Signal the end of the process
 done()

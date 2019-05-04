@@ -30,10 +30,13 @@ Installation
 
 1. Make sure you have R installed (https://cran.r-project.org/bin/windows/base/)
 2. Make sure you have the libraries readxl and writexl installed. Most likely you will want to install the tidyverse libraries as well. 
-3. Launch the R Console in SDI mode (single window). You can add –sdi to the Windows shortcut to force the Console to be launched in SDI mode. The console has to be running for RRunner to work. It can be minimized, though.
+3. Launch the R Console. The console has to be running for RRunner to work. It can be minimized, though.
 4. Import the RRunner.bas module into your Excel project or copy and paste everything (except the first line) into a new module.
 5. Make sure you have checked *Microsoft Scripting Runtime* in your Project References.
 
+   .. image:: ./images/ms_scripting_runtime.png
+      :width: 100%       
+      :align: center
 
 VBA library usage
 =================
@@ -68,7 +71,7 @@ RunR2Range
 
 .. code-block:: VB
    
-   RunR2Range(script As String, outRange As Range, ParamArray Ranges() As Variant) As Boolean
+   RunR2Range(script As String, RangeToImport As Range, ParamArray RangesToExport() As Variant) As Boolean
 
 This function accepts the name of the script (just the name, including the extension), a range where the result will be placed (just the top-left corner cell needs to be indicated) and a set of name-ranges pairs.
 
@@ -91,7 +94,7 @@ RunR2Plot
 
 .. code-block:: VB
    
-   RunR2Plot(script As String, inpRange As Range, outChart As ChartObject, PlotName As String) As Boolean
+   RunR2Plot(script As String, RangeToExport As Range, ChartToLoad As ChartObject, PlotName As String) As Boolean
 
 This function accepts the name of the script (just the name, including the extension), a range from which to read the data and a ChartObject in which to insert the generated chart image. To insert an empty ChartObject, just click on any empty cell, and go to Insert and select any chart type. You can then give a name to this area selecting it and using the usual Name Box (the input box directly to the left of the formula bar).
 
@@ -109,7 +112,7 @@ RunRScript
 
 .. code-block:: VB
    
-   RunRScript(InputRange As Dictionary, OutputRange As Dictionary, OutputPictures As Dictionary, script As String) As Boolean
+   RunRScript(RangesToExport As Dictionary, RangesToImport As Dictionary, PicturesToImport As Dictionary, script As String) As Boolean
 
 This function is the generalisation of the other two. The input ranges are sent as dictionaries using the name as key and the value the actual range.
 

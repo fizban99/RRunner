@@ -4,19 +4,20 @@ Option Explicit
 ' Configuration Parameters
 ' ###################################################################
 ' Path to the R Scripts and where the temporary files will be created
-Private Const WORKING_PATH = ".\R"
+Private Const R_SCRIPTS_PATH = ".\r"
+Private Const WORKING_PATH = ".\tmp"
 ' Time to wait for the R Script answer in milliseconds
-Private Const TimeOutMilliseconds = 10000
-Private Const INTERFACE_IN_FILE_NAME = "_Input_"
-Private Const INTERFACE_OUT_FILE_NAME = "_Output_"
+Private Const TIMEOUT_MILLISECONDS = 10000
+Private Const R_IN_FILE_NAME = "_RInput_"
+Private Const R_OUT_FILE_NAME = "_ROutput_"
 ' ###################################################################
 
-Private Declare Function GetWindowText Lib "User32" Alias "GetWindowTextA" (ByVal hWnd As Long, ByVal lpString As String, ByVal cch As Long) As Long
-Private Declare Function GetWindowTextLength Lib "User32" Alias "GetWindowTextLengthA" (ByVal hWnd As Long) As Long
-Private Declare Function GetWindow Lib "User32" (ByVal hWnd As Long, ByVal wCmd As Long) As Long
+Private Declare Function GetWindowText Lib "User32" Alias "GetWindowTextA" (ByVal hwnd As Long, ByVal lpString As String, ByVal cch As Long) As Long
+Private Declare Function GetWindowTextLength Lib "User32" Alias "GetWindowTextLengthA" (ByVal hwnd As Long) As Long
+Private Declare Function GetWindow Lib "User32" (ByVal hwnd As Long, ByVal wCmd As Long) As Long
 
 Private Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long) 'For 32 Bit Systems
-Private Declare Function PostMessage Lib "user32.dll" Alias "PostMessageA" (ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Private Declare Function PostMessage Lib "user32.dll" Alias "PostMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 Private Declare Function FindWindowEx Lib "user32.dll" Alias "FindWindowExA" (ByVal hWnd1 As Long, ByVal hWnd2 As Long, ByVal lpsz1 As String, ByVal lpsz2 As String) As Long
 Private Declare Function GetTickCount Lib "kernel32" () As Long
 Private Declare PtrSafe Function FindWindow Lib "User32" Alias "FindWindowA" ( _
@@ -24,18 +25,21 @@ Private Declare PtrSafe Function FindWindow Lib "User32" Alias "FindWindowA" ( _
     
 Private Const WM_CHAR As Long = &H102
 Private Const GW_HWNDNEXT = 2
+Private Const GW_CHILD = 5
+
 
 Dim WorkingPath As String
+Dim RScriptsPath As String
 
 
 Private Sub SetStatus(s As String)
     Application.StatusBar = s
 End Sub
 ' Get the window handle of a windows given a part of its caption
-Private Function GetHandleFromPartialCaption(ByRef lWnd As Long, ByVal sCaption As String) As Boolean
+Private Function GetHandleFromPartialCaption(ByRef lWnd As Long, ByVal sCaption As String, Optional ChildCaption As String) As Boolean
 
-    Dim lhWndP As Long
-    Dim sStr As String
+    Dim lhWndP As Long, lhWndC As Long
+    Dim sStr As String, found As Boolean, r As Long
     GetHandleFromPartialCaption = False
     lhWndP = FindWindow(vbNullString, vbNullString) 'PARENT WINDOW
     Do While lhWndP <> 0
@@ -44,26 +48,53 @@ Private Function GetHandleFromPartialCaption(ByRef lWnd As Long, ByVal sCaption 
         GetWindowText lhWndP, sStr, Len(sStr)
         sStr = Left$(sStr, Len(sStr) - 1)
         If InStr(1, sStr, sCaption) > 0 Then
-            GetHandleFromPartialCaption = True
+            found = True
             lWnd = lhWndP
             Exit Do
         End If
         lhWndP = GetWindow(lhWndP, GW_HWNDNEXT)
     Loop
+    If found And ChildCaption <> "" Then
+        lhWndC = GetWindow(lhWndP, GW_CHILD)
+        found = False
+        Do Until lhWndC = 0
+                sStr = Space$(255)
+                r = GetWindowText(lhWndC, sStr, 255)
+                sStr = Left$(sStr, r)
+                If InStr(1, sStr, ChildCaption) <> 0 Then
+                    lWnd = lhWndC
+                    found = True
+                    Exit Do
+                End If
+                lhWndC = GetWindow(lhWndC, GW_CHILD)
+        Loop
+    End If
+    GetHandleFromPartialCaption = found
+End Function
 
+
+
+' Converts a relative path into an absolute path
+Private Function AbsolutePath(path As String) As String
+    If Left(path, 1) = "." Then
+        AbsolutePath = ThisWorkbook.path & Right(path, Len(path) - 1)
+    Else
+        AbsolutePath = path
+    End If
 End Function
 
 ' Function that accepts multiple outputs and multiple inputs as dictionaries
-Public Function RunRScript(InputRange As Dictionary, OutputRange As Dictionary, OutputPictures As Dictionary, script As String) As Boolean
+Public Function RunRScript(RangesToExport As Dictionary, RangesToImport As Dictionary, PicturesToImport As Dictionary, script As String) As Boolean
     Dim h As Long, x As String, i As Long, KeyVal As String, WindowFound As Boolean
     Dim rng As Range, Key As Variant, OutputKey As String, doneFile As String
         
     Application.ScreenUpdating = False
-    If Left(WORKING_PATH, 1) = "." Then
-        WorkingPath = ThisWorkbook.Path & Right(WORKING_PATH, Len(WORKING_PATH) - 1)
-    Else
-        WorkingPath = WORKING_PATH
+    WorkingPath = AbsolutePath(WORKING_PATH)
+    If Not FolderExists(WorkingPath) Then
+        MkDir WorkingPath
     End If
+    
+    RScriptsPath = AbsolutePath(R_SCRIPTS_PATH)
     doneFile = WorkingPath + "\done"
     ' Remove output file before running the script
     If FileExists(doneFile) Then
@@ -71,24 +102,32 @@ Public Function RunRScript(InputRange As Dictionary, OutputRange As Dictionary, 
     End If
     
     ' Generate input files for the R script
-    ExportFiles InputRange
+    ExportFiles RangesToExport
     
     
-    script = "source('" + Replace(WorkingPath, "\", "/") + "/" + script + "')" + vbNewLine
-    WindowFound = GetHandleFromPartialCaption(h, "R Console")
+    script = "source('" + Replace(RScriptsPath, "\", "/") + "/" + script + "')" + vbNewLine
+    
+    ' Find MDI Child first
+    WindowFound = GetHandleFromPartialCaption(h, "RGui", "R Console")
+    
+    ' If not found, look for the console in SDI mode
+    If Not WindowFound Then
+        WindowFound = GetHandleFromPartialCaption(h, "R Console")
+    End If
+    
     If WindowFound Then
         For i = 1 To Len(script)
             PostMessage h, WM_CHAR, Asc(Mid(script, i)), 0
         Next i
         If WaitForFile(doneFile) Then
-            For Each Key In OutputRange.Keys
+            For Each Key In RangesToImport.Keys
                 OutputKey = Key
-                LoadOutput OutputKey, OutputRange(OutputKey)
+                LoadOutput OutputKey, RangesToImport(OutputKey)
             Next Key
-            If Not OutputPictures Is Nothing Then
-                For Each Key In OutputPictures.Keys
+            If Not PicturesToImport Is Nothing Then
+                For Each Key In PicturesToImport.Keys
                     OutputKey = Key
-                    LoadOutputPicture OutputKey, OutputPictures(OutputKey)
+                    LoadOutputPicture OutputKey, PicturesToImport(OutputKey)
                 Next Key
             End If
             RunRScript = True
@@ -110,7 +149,7 @@ Private Function WaitForFile(fileName As String) As Boolean
 
     SetStatus "Waiting for R Script to finish..."
     StartTickCount = GetTickCount()
-    EndTickCount = StartTickCount + TimeOutMilliseconds
+    EndTickCount = StartTickCount + TIMEOUT_MILLISECONDS
     done = False
     Do While Not done
         DoEvents
@@ -138,7 +177,15 @@ Private Function FileExists(fileName As String) As Boolean
 End Function
 
 
+' Helper function to check if a folder exists
+Private Function FolderExists(folderName As String) As Boolean
+    If Dir(folderName, vbDirectory) <> "" Then
+        FolderExists = True
+    Else
+        FolderExists = False
+    End If
 
+End Function
 
 
 ' Load a xlsx file into a range
@@ -147,7 +194,7 @@ Private Sub LoadOutput(TableName As String, rng As Range)
     Dim rows As Long, cols As Long
     
     SetStatus "Retrieving output..."
-    Set wb = Application.Workbooks.Open(WorkingPath + "\" & INTERFACE_OUT_FILE_NAME & ".xlsx")
+    Set wb = Application.Workbooks.Open(WorkingPath + "\" & R_OUT_FILE_NAME & ".xlsx")
     tblArr = wb.Worksheets(TableName).UsedRange.Value
     wb.Close
     rows = UBound(tblArr, 1)
@@ -160,27 +207,27 @@ End Sub
 
 
 ' Simplified call to run a script with a single outRange called Resultado
-Public Function RunR2Range(script As String, outRange As Range, ParamArray Ranges() As Variant) As Boolean
+Public Function RunR2Range(script As String, RangeToImport As Range, ParamArray RangesToExport() As Variant) As Boolean
     Dim i As Integer
     Dim inp As New Dictionary, out As New Dictionary, outP As Dictionary
     
-    For i = LBound(Ranges) To UBound(Ranges) Step 2
-        Set inp(Ranges(i)) = Ranges(i + 1)
+    For i = LBound(RangesToExport) To UBound(RangesToExport) Step 2
+        Set inp(RangesToExport(i)) = RangesToExport(i + 1)
     Next i
     
-    Set out("result") = outRange
+    Set out("result") = RangeToImport
     RunR2Range = RunRScript(inp, out, outP, script)
 End Function
 
 ' Simplified call to run a script with a single outRange called Resultado
-Public Function RunR2Plot(script As String, inpRange As Range, outChart As ChartObject, PlotName As String) As Boolean
+Public Function RunR2Plot(script As String, RangeToExport As Range, ChartToLoad As ChartObject, PlotName As String) As Boolean
     Dim i As Integer
     Dim inp As New Dictionary, out As New Dictionary, outP As New Dictionary
     
-    Set inp(PlotName) = inpRange
+    Set inp(PlotName) = RangeToExport
     
     
-    Set outP(PlotName) = outChart
+    Set outP(PlotName) = ChartToLoad
     RunR2Plot = RunRScript(inp, out, outP, script)
 End Function
 
@@ -221,7 +268,7 @@ Private Sub ExportFiles(InputRange As Dictionary)
     Dim Key As Variant, KeyVal As String
     Dim tempWB As Workbook, filePath As String
     
-    filePath = WorkingPath + "\" + INTERFACE_IN_FILE_NAME + ".xlsx"
+    filePath = WorkingPath + "\" + R_IN_FILE_NAME + ".xlsx"
     SetStatus "Exporting ranges to R..."
     Set tempWB = Application.Workbooks.Add()
     For Each Key In InputRange.Keys
