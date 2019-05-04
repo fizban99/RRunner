@@ -85,7 +85,7 @@ Example:
        MsgBox "Done"
    End If
  
-This will generate an _Input_.xlsx file with two sheets (they will be called "table1" and "table2" respectively) that will contain the data of Range1 and Range2 and SampleJoin.r script will be called. The script should output the result in a file called _Output_.xlsx in a sheet called "result" (this is hardcoded in the module). The data will be then read from this sheet and placed starting at the top-left corner of the named range called "calculated_values".
+This will generate an _RInput_.xlsx file with two sheets (they will be called "table1" and "table2" respectively) that will contain the data of Range1 and Range2 and SampleJoin.r script will be called. The script should output the result in a file called _ROutput_.xlsx in a sheet called "result" (this is hardcoded in the module). The data will be then read from this sheet and placed starting at the top-left corner of the named range called "calculated_values".
 Note that although the ranges are referred as the whole columns, only the rows up to the used range will be sent to R. 
 
 
