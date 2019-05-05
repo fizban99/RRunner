@@ -21,7 +21,7 @@ Main features
 * Only the default R installation is required. No additional components are required to interact with R, although RStudio is recommended for the development of your scripts.
 * The R Console is used transparently to launch the R scripts, so all output messages are displayed on it. Some antivirus prevent running external files from within Excel. By pre-launching the R Console manually, we can avoid a false positive alert.
 * The ranges are sent and retrieved to R through temporary Excel files that you can use while you develop your scripts, independently of the original Excel. This means that you can develop and debug your scripts in R Studio and finally integrate them with Excel. 
-* Generate Static plots in R and import them in Excel 
+* Static plots can be generetad in R and then displayed in Excel 
 * Sample programs demonstrating the different functions
 
 
