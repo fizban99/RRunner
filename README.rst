@@ -182,6 +182,23 @@ Example:
 
    writeResult(list("result" = res))
 
+saveChart 
++++++++++++++++++++++++++++++
+
+.. code-block:: R
+
+   saveChart <- function(name,  pxwidth = 1024, pxheight = 768, dpi=150) {
+     ggsave(filename = paste("../tmp/",name,".png",sep = ""),dpi=dpi, units="in", width=pxwidth/dpi, height=pxheight/dpi)
+   }}
+
+This is defined in excelhelper.r and allows writing a ggplot2 plot as png file. By default it will be saved with a size of 1024x768 pixels.
+
+Example:
+
+.. code-block:: R
+
+   saveChart("myplot")
+
 
 done
 +++++++++++++++++++++++++++++
