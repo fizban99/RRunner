@@ -3,7 +3,7 @@ RRunner: Simple way of running R scripts from Excel VBA
 
 This VBA module for Excel allows running R Scripts from Excel. You can send Ranges to your scripts and retrieve plots from them.
 
-This is a much simpler solution than RExcel. It is simpler to install and, although it has less features, it provides enough functionality to leverage the power of R when you need Excel to perform specific tasks better suited for R. This tool is also useful for beginners in R that typically use Excel and sometimes some VBA and want to start using R without entirely leaving the Excel environment.
+This is a much simpler solution than RExcel or BERT. RRunner is simpler to install and, although it has less features, it provides enough functionality to leverage the power of R when you need Excel to perform specific tasks better suited for R. This tool is also useful for beginners in R that typically use Excel and sometimes some VBA and want to start using R without entirely leaving the Excel environment. It also does not have a steep learning curve and the code is pure R (except for some boiler plate code at the beginning an some helper functions). The basic idea is to perform in Excel/VBA what is easy to do in Excel/VBA and use R for the tasks where R can shine, by calling an R script behind the scenes. This could also be a first step towards transitioning from Excel to R.
 
 
    .. image:: ./images/RRunner.png
@@ -18,11 +18,14 @@ This is a much simpler solution than RExcel. It is simpler to install and, altho
 Main features
 =============
 
-* Only the default R installation is required. No additional components are required to interact with R, although RStudio is recommended for the development of your scripts.
+* Only the default R installation is required. No additional components are required to interact with R, although RStudio is recommended for the development of your scripts. 
+* Enterprise-friendly: Administrative privileges are not necessary to use or install the module. Some enterprises do not allow exe files to be executed outside the ones white-listed, buy policies are more relaxed for self-created VBA code. So RRunner comes handy in these situations. 
+* Workbooks are also easily portable from one computer to another, as long as the r subolder is also copied along and the destination system has also R installed, although R installation is not required to only view the files.
 * The R Console is used transparently to launch the R scripts, so all output messages are displayed on it. Some antivirus prevent running external files from within Excel. By pre-launching the R Console manually, we can avoid a false positive alert.
 * The ranges are sent and retrieved to R through temporary Excel files that you can use while you develop your scripts, independently of the original Excel. This means that you can develop and debug your scripts in R Studio and finally integrate them with Excel. 
-* Static plots can be generetad in R and then displayed in Excel 
+* Static plots from an Excel range can be generetad in R and then displayed back in Excel 
 * Sample programs demonstrating the different functions
+* Currently only 32-bit Excel is supported, although R can be either 32 or 64 bits.
 
 
 Installation
