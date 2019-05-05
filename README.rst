@@ -7,11 +7,18 @@ This is a much simpler solution than RExcel(http://rcom.univie.ac.at/download.ht
 
 This tool is also useful for beginners in R that typically use Excel and sometimes some VBA and want to start using R without entirely leaving the Excel environment. It also does not have a steep learning curve and the code is pure R (except for some boiler plate code at the beginning an some helper functions). The basic idea is to perform in Excel/VBA what is easy to do in Excel/VBA and use R for the tasks where R can shine, by calling an R script behind the scenes. This could also be a first step towards transitioning from Excel to R, since as you learn how to perform certain tasks in R, you might start performing more things in R and less things in Excel/VBA. 
 
-
-   .. image:: ./images/RRunner.png
+   .. image:: ./images/IrisExample.gif
       :width: 100%
       :align: center
+
+
+   .. image:: ./images/RRunner.png
+      :width: 50%
+      :align: center
       
+
+
+
 .. contents::
 
 .. section-numbering::
