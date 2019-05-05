@@ -224,7 +224,7 @@ Example:
    done()
    
    
-Recommendations for your own scripts
+Tips
 ====================================
 
 1. Start with the default template and rename it as needed, placing it in an ./r subfolder
