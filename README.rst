@@ -231,4 +231,5 @@ Tips
 2. Copy excelhelper.r to the ./r folder
 3. Write the export piece of code in VBA to get some data in the tmp folder before coding your R script. Remember to open the R Console.
 4. Once you have the data in the tmp folder, create your script with RStudio modifying the renamed template.r. 
-5. Test your script in RStudio first and then test the integration with Excel.
+5. Test your script in RStudio first commenting out the rm(list=ls()) to be able to see the content of the variables at the end of the execution.
+6. Finally test the integration with Excel.
