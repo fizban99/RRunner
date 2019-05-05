@@ -222,3 +222,13 @@ Example:
 .. code-block:: R
 
    done()
+   
+   
+Recommendations for your own scripts
+====================================
+
+1. Start with the default template and rename it as needed, placing it in an ./r subfolder
+2. Copy excelhelper.r to the ./r folder
+3. Write the export piece of code in VBA to get some data in the tmp folder before coding your R script. Remember to open the R Console.
+4. Once you have the data in the tmp folder, create your script with RStudio modifying the renamed template.r. 
+5. Test your script in RStudio first and then test the integration with Excel.
