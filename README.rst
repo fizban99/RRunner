@@ -19,11 +19,11 @@ Main features
 =============
 
 * Only the default R installation is required. No additional components are required to interact with R, although RStudio is recommended for the development of your scripts. 
-* Enterprise-friendly: Administrative privileges are not necessary to use or install the module. Some enterprises do not allow exe files to be executed outside the ones white-listed, buy policies are more relaxed for self-created VBA code. So RRunner comes handy in these situations. 
-* Workbooks are also easily portable from one computer to another, as long as the r subolder is also copied along and the destination system has also R installed, although R installation is not required to only view the files.
+* Enterprise-friendly: Administrative privileges are not necessary to use or install the module. Some enterprise policies do not allow exe files to be executed outside the ones white-listed, but policies are more relaxed for self-created VBA code. So RRunner comes handy in these situations where both R and Excel are standard and approved packages within the enterprise.
+* Workbooks are also easily portable from one computer to another, as long as the r subfolder is also copied along and the destination system has also R installed, although R installation is not required to only view the Excel files.
 * The R Console is used transparently to launch the R scripts, so all output messages are displayed on it. Some antivirus prevent running external files from within Excel. By pre-launching the R Console manually, we can avoid a false positive alert.
 * The ranges are sent and retrieved to R through temporary Excel files that you can use while you develop your scripts, independently of the original Excel. This means that you can develop and debug your scripts in R Studio and finally integrate them with Excel. 
-* Static plots from an Excel range can be generetad in R and then displayed back in Excel 
+* Static plots from an Excel range can be generated in R and then displayed back in Excel 
 * Sample programs demonstrating the different functions
 * Currently only 32-bit Excel is supported, although R can be either 32 or 64 bits.
 
