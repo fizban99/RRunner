@@ -7,8 +7,8 @@ getTable <- function(tableName) {
 }
 
 
-writeResult <- function(tablenames) {
-  write_xlsx(tablenames, path = "../tmp/_ROutput_.xlsx", col_names = TRUE, format_headers = FALSE)
+writeResult <- function(tablenames, col_names = TRUE) {
+  write_xlsx(tablenames, path = "../tmp/_ROutput_.xlsx", col_names = col_names, format_headers = FALSE)
 }
 
 saveChart <- function(name,  pxwidth = 1024, pxheight = 768, dpi=150) {

@@ -173,13 +173,13 @@ writeResult
 
 .. code-block:: R
 
-   writeResult <- function(tablenames) {
-     write_xlsx(tablenames, path = "../tmp/_ROutput_.xlsx", col_names = TRUE, format_headers = FALSE)
+   writeResult <- function(tablenames, col_names = TRUE) {
+     write_xlsx(tablenames, path = "../tmp/_ROutput_.xlsx", col_names = col_names, format_headers = FALSE)
    }
 
-This is defined in excelhelper.r and allows writing a dataframe into the output file using writexl
+This is defined in excelhelper.r and allows writing a dataframe into the output file using writexl. Column names are displayed by default.
 
-Example:
+Example when returning just one dataframe (res in the example). The generated sheet should be called "result":
 
 .. code-block:: R
 
