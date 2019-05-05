@@ -11,14 +11,6 @@ This tool is also useful for beginners in R that typically use Excel and sometim
       :width: 100%
       :align: center
 
-
-   .. image:: ./images/RRunner.png
-      :width: 50%
-      :align: center
-      
-
-
-
 .. contents::
 
 .. section-numbering::
