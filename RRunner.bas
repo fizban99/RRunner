@@ -104,7 +104,7 @@ Private Sub logError(errorText As String)
     Dim f As Long
     f = FreeFile()
     On Error Resume Next
-    Open WorkingPath + "\error.log" For Output As f
+    Open WorkingPath + "\error.log" For Append As f
     Print #f, errorText
     Close f
     On Error GoTo 0
@@ -139,7 +139,7 @@ End Function
 
 ' Displays the contents of the error.log on the R Console
 Private Sub ShowErrorOnConsole()
-    Post2Console ("writeLine(readLine('" + WorkingPath + "\error.log" + "'))") + vbNewLine
+    Post2Console ("writeLines(readLines('" + Replace(WorkingPath, "\", "/") + "/error.log" + "'))") + vbNewLine
 End Sub
 
 
@@ -170,6 +170,8 @@ Public Function RunRScript(RangesToExport As Dictionary, RangesToImport As Dicti
 
     ' Generate input files for the R script
     If Not ExportFiles(RangesToExport) Then
+        RunRScript = False
+        ShowErrorOnConsole
         Exit Function
     End If
     
