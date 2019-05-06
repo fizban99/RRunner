@@ -88,7 +88,10 @@ End Function
 
 
 ' Converts a relative path into an absolute path
-Private Function AbsolutePath(path As String) As String
+Private Function AbsolutePath(ByVal path As String) As String
+    If Right(path, 1) = "\" Or Right(path, 1) = "/" Then
+        path = Left(path, Len(path) - 1)
+    End If
     If Left(path, 1) = "." Then
         AbsolutePath = ThisWorkbook.path & Right(path, Len(path) - 1)
     Else
@@ -96,32 +99,25 @@ Private Function AbsolutePath(path As String) As String
     End If
 End Function
 
-' Function that accepts multiple outputs and multiple inputs as dictionaries
-Public Function RunRScript(RangesToExport As Dictionary, RangesToImport As Dictionary, PicturesToImport As Dictionary, script As String) As Boolean
-    Dim h As Long, x As String, i As Long, KeyVal As String, WindowFound As Boolean
-    Dim rng As Range, Key As Variant, OutputKey As String, doneFile As String
-        
-    Application.ScreenUpdating = False
-    WorkingPath = AbsolutePath(WORKING_PATH)
-    If Not FolderExists(WorkingPath) Then
-        MkDir WorkingPath
-    End If
-    
-    RScriptsPath = AbsolutePath(R_SCRIPTS_PATH)
-    doneFile = WorkingPath + "\done"
-    ' Remove output file before running the script
-    If FileExists(doneFile) Then
-        Kill doneFile
-    End If
-    
-    ' Generate input files for the R script
-    If Not ExportFiles(RangesToExport) Then
-        Exit Function
-    End If
-    
-    script = "source('" + Replace(RScriptsPath, "\", "/") + "/" + script + "')" + vbNewLine
-    
-    ' Find MDI Child first
+' Tries to log an error to the error.log and displays it on the Console
+Private Sub logError(errorText As String)
+    Dim f As Long
+    f = FreeFile()
+    On Error Resume Next
+    Open WorkingPath + "\error.log" For Output As f
+    Print #f, errorText
+    Close f
+    On Error GoTo 0
+    Post2Console "### RRunner: " + errorText + vbNewLine
+End Sub
+
+
+' Sends a given text to the R Console using PostMessage
+Private Function Post2Console(script As String)
+    Dim h As Long, x As String, i As Long, WindowFound As Boolean
+         
+ 
+ ' Find MDI Child first
     WindowFound = GetHandleFromPartialCaption(h, "RGui", "R Console")
     
     ' If not found, look for the console in SDI mode
@@ -133,6 +129,52 @@ Public Function RunRScript(RangesToExport As Dictionary, RangesToImport As Dicti
         For i = 1 To Len(script)
             PostMessage h, WM_CHAR, Asc(Mid(script, i)), 0
         Next i
+        Post2Console = True
+    Else
+        Post2Console = False
+        MsgBox "R Console not found. Please start the R Console first."
+    End If
+
+End Function
+
+' Displays the contents of the error.log on the R Console
+Private Sub ShowErrorOnConsole()
+    Post2Console ("writeLine(readLine('" + WorkingPath + "\error.log" + "'))") + vbNewLine
+End Sub
+
+
+' Function that accepts multiple outputs and multiple inputs as dictionaries
+Public Function RunRScript(RangesToExport As Dictionary, RangesToImport As Dictionary, PicturesToImport As Dictionary, script As String) As Boolean
+    Dim x As String, KeyVal As String, errorFile As String
+    Dim rng As Range, Key As Variant, OutputKey As String, doneFile As String
+        
+    Application.ScreenUpdating = False
+    WorkingPath = AbsolutePath(WORKING_PATH)
+    If Not FolderExists(WorkingPath) Then
+        On Error GoTo errorMkdir:
+        MkDir WorkingPath
+        On Error GoTo 0
+    End If
+    
+    RScriptsPath = AbsolutePath(R_SCRIPTS_PATH)
+    doneFile = WorkingPath + "\done"
+    ' Remove output file before running the script
+    If FileExists(doneFile) Then
+        Kill doneFile
+    End If
+    
+    errorFile = WorkingPath + "\error.log"
+    If FileExists(errorFile) Then
+        Kill errorFile
+    End If
+
+    ' Generate input files for the R script
+    If Not ExportFiles(RangesToExport) Then
+        Exit Function
+    End If
+    
+    script = "source('" + Replace(RScriptsPath, "\", "/") + "/" + script + "')" + vbNewLine
+    If Post2Console(script) Then
         If WaitForFile(doneFile) Then
             For Each Key In RangesToImport.Keys
                 OutputKey = Key
@@ -147,12 +189,19 @@ Public Function RunRScript(RangesToExport As Dictionary, RangesToImport As Dicti
             RunRScript = True
         Else
             RunRScript = False
+            ShowErrorOnConsole
         End If
     Else
         RunRScript = False
-        MsgBox "R Console not found. Please start the R Console first."
     End If
+    
     Application.ScreenUpdating = True
+    Exit Function
+
+errorMkdir:
+    On Error GoTo 0
+    logError "Error: Could not create " + WorkingPath
+    RunRScript = False
 End Function
 
 ' Check every 100 milliseconds if the expected file is available
@@ -280,7 +329,7 @@ Private Function ExportTable(TableName As String, rng As Range, tempWB As Workbo
     Exit Function
 empty_range:
     On Error GoTo 0
-    MsgBox ("Empty Range selected to export.")
+    logError "Empty Range selected to export."
     ExportTable = False
 End Function
 
@@ -319,8 +368,8 @@ Private Sub LoadOutputPicture(PictureName As String, ChartArea As ChartObject)
 
     On Error Resume Next
     Set pic = ChartArea.Chart.Shapes.AddPicture(filePath, msoFalse, msoCTrue, 0, 0, -1, -1)
-    If Err.Number <> 0 Then
-        MsgBox Err.Description & ": " & filePath
+    If err.Number <> 0 Then
+        logError err.Description & ": " & filePath
         Exit Sub
     End If
     On Error GoTo 0
