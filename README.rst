@@ -222,7 +222,31 @@ Example:
 .. code-block:: R
 
    done()
+
+
+Excel User Defined Functions (UDF) 
+=================
+
+These functions allow to call R directly within a cell. The cell will show "(R Code ON)" or "(R Code OFF)" when it contains one of these UDF functions.
+
+RunRInCell2Range
++++++++++++++++++++++++++++++   
+
+.. code-block:: VB
    
+  RunRInCell2Range(Script As Variant, Trigger As Variant, DestCell As Range, ParamArray RangesToExport()) As Variant
+
+This function can execute a script written within a range (or in a string as an argument) as long as Trigger evaluates as different from zero. The result will be written to DestCell and the ranges will be exported as range1, range2...
+
+
+RunRInCell2Plot
++++++++++++++++++++++++++++++   
+
+.. code-block:: VB
+   
+   RunRInCell2Plot(Script As Variant, Trigger As Range, ChartToLoad As String, ParamArray RangesToExport()) As Variant
+
+This function can execute a script written within a range (or in a string as an argument) as long as Trigger evaluates as different from zero. The resulting plot will be diplayed on the Chart name given by CharToLoad and the ranges will be exported as range1, range2...
    
 Tips
 ====================================
