@@ -4,7 +4,7 @@ An introduction to R for Microsoft Excel users with RRunner
 This example sheet is based on the article published by Tony Ojeda (https://districtdatalabs.silvrback.com/intro-to-r-for-microsoft-excel-users)
 
 
-   .. image:: ./images/IntroToRInCell.gif.gif
+   .. image:: ./images/IntroToRInCell.gif
       :width: 100%
       :align: center
 
