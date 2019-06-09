@@ -1,4 +1,4 @@
-An introduction to R for Microsoft Excel users with RRunner
+Coloured World map in Excel through R
 ###########################################################
 
 This example sheet shows how to create a choropleth map (thematic map in which areas are shaded or patterned in proportion to the measurement of the variable being displayed on the map) in Excel using RRunner
